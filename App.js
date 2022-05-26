@@ -1,30 +1,26 @@
-import { View, ImageBackground, SafeAreaView } from 'react-native';
+import { createContext, useState } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import Home from './src/scenes/Home';
+import Details from './src/scenes/Details';
 import { StatusBar } from 'expo-status-bar';
-import styles from './src/styles'
 
-const image = {uri: 'https://i.pinimg.com/736x/7a/d0/02/7ad00221578040669540e93b7ffc9202.jpg'}
+const Stack = createNativeStackNavigator()
+
+export const SingleRestContext = createContext(null)
 
 export default function App() {
-  const Stack = createNativeStackNavigator()
-
-  // ?  --> IT CHECKS IF THE DATA EXISTS. Because it will render before the FETCH, it should 
-  // only render when the variable is set
+  const [currentRest, setCurrRest] = useState()
 
   return (
-    <NavigationContainer>
-      {/* <View style={styles.container}>
-        <ImageBackground resizeMode='cover' source={image} style={styles.container}>
-          <SafeAreaView style={styles.container}> */}
-            <Stack.Navigator>
-              <Stack.Screen name='Home' component={Home}/>
-            </Stack.Navigator>
-            <StatusBar style="auto" />
-          {/* </SafeAreaView>
-        </ImageBackground>
-      </View> */}
-    </NavigationContainer>
+    <SingleRestContext.Provider value={{currentRest, setCurrRest}}>
+      <NavigationContainer>
+        <Stack.Navigator>
+          <Stack.Screen name='Home' component={Home} options={{ title: 'Local Restaurants'}}/>
+          <Stack.Screen name='Details' component={Details} options={{ title: 'Restaurant detail'}}/>
+        </Stack.Navigator>
+        <StatusBar style="auto" />
+      </NavigationContainer>
+    </SingleRestContext.Provider>
   );
 }
