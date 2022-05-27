@@ -4,15 +4,19 @@ import { SingleRestContext } from "../../App";
 import RestaurantCard from "../components/RestaurantCard";
 
 export default function Home ( {navigation} ) {
+    // put restaurants in decrescent rating order
     const [allRestaurants, setAllRestaurants] = useState()
-    const { setCurrRest } = useContext(SingleRestContext)
+    const { setCurrRest, ratingsUpdated } = useContext(SingleRestContext)
 
     useEffect (() => {
         fetch('https://my-first-firestore-rh.web.app/restaurants')
             .then(res => res.json())
-            .then(setAllRestaurants)
+            .then(data => {
+                const newRating = data.sort((a,b) => b.rating - a.rating)
+                setAllRestaurants(newRating)}
+                )
             .catch(console.error)
-    },[])
+    },[ratingsUpdated])
 
     const handlePress = (restaurant) => {
         setCurrRest(restaurant)
